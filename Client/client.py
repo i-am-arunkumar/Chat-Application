@@ -1,7 +1,7 @@
 from socket import AF_INET, SOCK_STREAM, socket
 from tkinter import *
 import threading
-import tkinter.messagebox
+from tkinter import messagebox
 import datetime
 import sys
 
@@ -35,12 +35,13 @@ class GUI:
                              height=False)
         self.login.configure(width=350,
                              height=300)
-        self.login.configure(bg="#ffcc99")
+        self.login.configure(bg="#17202A")
         # create a Label
         self.pls = Label(self.login,
                          text="LET'S CHAT!\n Enter Name To Continue:",
                          justify=CENTER,
-                         font="Times 16 bold", bg="#ffcc99")
+                         font="Helvetica 16 bold", bg="#17202A",
+                         fg="#EAECEE")
 
         self.pls.place(relheight=0.15,
                        relx=0.2,
@@ -48,14 +49,15 @@ class GUI:
 
         self.labelName = Label(self.login,
                                text="NAME:",
-                               font="Times 14 bold", bg="#ffcc99")
+                               font="Helvetica 14 bold", bg="#17202A",
+                               fg="#EAECEE")
 
         self.labelName.place(relheight=0.1,
                              relx=0.1,
                              rely=0.4)
 
         self.icon = PhotoImage(file=r"chat.png")
-        self.iconLabel = Label(self.login, image=self.icon, bg="#ffcc99")
+        self.iconLabel = Label(self.login, image=self.icon, bg="#17202A")
         self.iconLabel.place(relx=0.10,
                              rely=0.65)
         """self.labelPass = Label(self.login,
@@ -86,26 +88,18 @@ class GUI:
 
         self.go = Button(self.login,
                          text="LOGIN",
-                         font="Times 14 bold", bg="light blue",
+                         font="Helvetica 14 bold", bg="Crimson", fg="#EAECEE",
                          command=lambda: self.goAhead(self.entryName.get()))
         self.go.flash()
 
         self.go.place(relx=0.4,
                       rely=0.60)
-
-        self.Window.protocol("WM_DELETE_WINDOW", self.close)
         
+        self.Window.protocol("WM_DELETE_WINDOW", self.EXIT)
+
         self.login.bind(
             '<Return>', lambda e: self.goAhead(self.entryName.get()))
         self.Window.mainloop()
-        
-
-    def close(self):
-        self.client.send(bytes('bye', FORMAT))
-        self.client.send(bytes('bye', FORMAT))
-        self.stop = True
-        self.Window.destroy()
-        self.client.close()
 
     def goAhead(self, name):
         self.login.destroy()
@@ -130,18 +124,18 @@ class GUI:
                               height=False)
         self.Window.configure(width=470,
                               height=550,
-                              bg="#ffcc99")
+                              bg="#17202A")
         self.labelHead = Label(self.Window,
-                               bg="light blue",
-                               fg="#001a4d",
+                               bg="#17202A",
+                               fg="#EAECEE",
                                text=self.name,
-                               font="Times 13 bold",
+                               font="Helvetica 13 bold",
                                pady=5)
 
         self.labelHead.place(relwidth=1)
         self.line = Label(self.Window,
                           width=450,
-                          bg="light blue")
+                          bg="#ABB2B9")
 
         self.line.place(relwidth=1,
                         rely=0.07,
@@ -150,32 +144,32 @@ class GUI:
         self.textCons = Text(self.Window,
                              width=20,
                              height=2,
-                             bg="#ffcc99",
-                             fg="black",
-                             font="Times 14 bold",
+                             bg="#17202A",
+                             fg="#EAECEE",
+                             font="Helvetica 14",
                              padx=5,
                              pady=5)
 
         self.textCons.place(relheight=0.745,
                             relwidth=1,
-                            rely=0.175)
+                            rely=0.08)
 
         self.labelBottom = Label(self.Window,
-                                 bg="light blue",
+                                 bg="#ABB2B9",
                                  height=80)
 
         self.labelBottom.place(relwidth=1,
-                               rely=0.9)
+                               rely=0.825)
 
         self.entryMsg = Entry(self.labelBottom,
-                              bg="#ffcc99",
-                              fg="black",
-                              font="Times 13")
+                              bg="#2C3E50",
+                              fg="#EAECEE",
+                              font="Helvetica 13")
 
-    # place the given widget
-    # into the gui window
+        # place the given widget
+        # into the gui window
         self.entryMsg.place(relwidth=0.74,
-                            relheight=0.03,
+                            relheight=0.06,
                             rely=0.008,
                             relx=0.011)
 
@@ -184,10 +178,11 @@ class GUI:
     # create a Send Button
         self.buttonImg = PhotoImage(file=r"greentick.png")
         self.buttonMsg = Button(self.labelBottom,
-                                text="SEND",
-                                font="Times 14 bold",
+                                text="SEND ",
+                                font="Helvetica 14 bold",
                                 width=18,
-                                bg="#00ff00", image=self.buttonImg, compound=RIGHT,
+                                bg="Navy Blue", fg="#00ff00",
+                                image=self.buttonImg, compound=RIGHT,
                                 command=lambda: self.sendButton(self.entryMsg.get()))
 
         self.Window.bind(
@@ -212,16 +207,19 @@ class GUI:
 
         self.textCons.config(state=DISABLED)
 
-
+    def EXIT(self):
+        if messagebox.askquestion("Quit","Are you sure to quit??") == "yes":
+            self.client.send("__EXITING".encode(FORMAT))
+            self.client.send("__EXITING".encode(FORMAT))
+            self.Window.destroy()
+            quit()
 # function to basically start the thread for sending messages
-
     def sendButton(self, msg):
         self.textCons.config(state=DISABLED)
         self.msg = msg
         self.entryMsg.delete(0, END)
         self.snd = threading.Thread(target=self.sendMessage)
         self.snd.start()
-
 
 # function to receive messages
 
