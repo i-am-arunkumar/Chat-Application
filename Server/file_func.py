@@ -7,6 +7,7 @@ def Client_Connect():
         Content = File.read()
         File.close()
         return Content
+#To add a new message to the file
 def Write_New(Time,Name,Msg):
     File = open("Group.txt",'a')
     if File:
