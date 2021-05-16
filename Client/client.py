@@ -2,6 +2,7 @@ from socket import AF_INET, SOCK_STREAM, socket
 from tkinter import *
 import threading
 import tkinter.messagebox
+import datetime
 
 FORMAT = 'utf8'
 
@@ -235,7 +236,10 @@ class GUI:
     def sendMessage(self):
         self.textCons.config(state=DISABLED)
         while True:
+            time=datetime.datetime.now()
+            time_msg="%s/%s/%s-%s:%s:%s"%(time.day,time.month,time.year,time.hour,time.minute,time.second)
             message = (f"{self.msg}")
+            self.client.send(time_msg.encode(FORMAT))
             self.client.send(message.encode(FORMAT))
             break
 

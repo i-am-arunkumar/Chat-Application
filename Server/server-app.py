@@ -1,3 +1,4 @@
+from file_func import Client_Connect, Write_New
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 
@@ -28,6 +29,7 @@ class Server:
             client, client_address = self.SERVER.accept()
             print("Client Connected : ", client_address)
             Server.addresses[client] = client_address
+            client.send(Client_Connect().encode("utf8"))
             Thread(target=Server.client_thread, args=(self, client,)).start()
 
     def client_thread(self, client):
@@ -35,9 +37,11 @@ class Server:
         name = client.recv(Server.BUFSIZ).decode("utf8")
         Server.connections[client] = name
         while True:
+            time= client.recv(Server.BUFSIZ).decode("utf8")
             msg = client.recv(Server.BUFSIZ).decode("utf8")
             if msg != "bye":
-                Server.broadcast(msg, name+": ")
+                Server.broadcast(msg,"{Time}=>\t{Name}:\t".format(Time=time,Name=name))
+                Write_New(time,name,msg)
             else:
                 client.send(bytes("bye", "utf8"))
                 client.close()
