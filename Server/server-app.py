@@ -43,7 +43,7 @@ class Server:
                 Server.broadcast(msg,"{Time}=>\t{Name}:\t".format(Time=time,Name=name))
                 Write_New(time,name,msg)
             else:
-                client.send(bytes("bye", "utf8"))
+                #client.send(bytes("bye", "utf8"))
                 client.close()
                 del Server.connections[client]
                 break

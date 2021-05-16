@@ -93,9 +93,13 @@ class GUI:
                       rely=0.60)
 
 
-
+        self.Window.protocol("WM_DELETE_WINDOW", self.close)
         self.Window.mainloop()
 
+    def close(self):
+        self.client.send(bytes('bye',FORMAT))
+        self.client.send(bytes('bye',FORMAT))
+        self.Window.destroy()
 
     def goAhead(self, name):
         self.login.destroy()
