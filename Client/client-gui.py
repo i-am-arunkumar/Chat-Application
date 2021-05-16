@@ -1,10 +1,11 @@
 from socket import AF_INET, SOCK_STREAM, socket
 from tkinter import *
 import threading
+import datetime
 
 FORMAT = 'utf8'
 
-HOST = '127.0.0.1'
+HOST = '120.138.15.60'
 PORT = 33000
 BUFSIZ = 1024
 ADDR = (HOST, PORT)
@@ -87,7 +88,7 @@ class GUI:
         self.Window.title("CHATROOM")
         self.Window.resizable(width=False,
                               height=False)
-        self.Window.configure(width=470,
+        self.Window.configure(width=670,
                               height=550,
                               bg="#17202A")
         self.labelHead = Label(self.Window,
@@ -196,13 +197,15 @@ class GUI:
                 # an error will be printed on the command line or console if there's an error
                 print("An error occured!")
                 self.client.close()
-                break
 
     # function to send messages
     def sendMessage(self):
         self.textCons.config(state=DISABLED)
         while True:
+            time=datetime.datetime.now()
+            time_msg="%s/%s/%s-%s:%s:%s"%(time.day,time.month,time.year,time.hour,time.minute,time.second)
             message = (f"{self.msg}")
+            self.client.send(time_msg.encode(FORMAT))
             self.client.send(message.encode(FORMAT))
             break
 
