@@ -37,20 +37,28 @@ class Server:
         name = client.recv(Server.BUFSIZ).decode("utf8")
         Server.connections[client] = name
         while True:
-            time= client.recv(Server.BUFSIZ).decode("utf8")
-            msg = client.recv(Server.BUFSIZ).decode("utf8")
-            if msg != "bye":
-                Server.broadcast(msg,"{Time}=>\t{Name}:\t".format(Time=time,Name=name))
-                Write_New(time,name,msg)
-            else:
-                #client.send(bytes("bye", "utf8"))
+            try:
+                time = client.recv(Server.BUFSIZ).decode("utf8")
+                msg = client.recv(Server.BUFSIZ).decode("utf8")
+                if msg != "bye":
+                    Server.broadcast(
+                        msg, "{Time}=>\t{Name}:\t".format(Time=time, Name=name))
+                    Write_New(time, name, msg)
+                else:
+                    #client.send(bytes("bye", "utf8"))
+                    client.close()
+                    del Server.connections[client]
+                    break
+            except:
                 client.close()
                 del Server.connections[client]
-                break
 
-    def broadcast(msg, prefix=""): 
+    def broadcast(msg, prefix=""):
         for sock in Server.connections:
-            sock.send(bytes(prefix + msg, "utf8"))
+            try:
+                sock.send(bytes(prefix + msg, "utf8"))
+            except:
+                continue
 
 
 s = Server()

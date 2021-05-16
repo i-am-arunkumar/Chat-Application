@@ -3,6 +3,7 @@ from tkinter import *
 import threading
 import tkinter.messagebox
 import datetime
+import sys
 
 FORMAT = 'utf8'
 
@@ -19,6 +20,7 @@ class GUI:
                 self.goAhead(self.entryName.get())
              else:
                 tkinter.messagebox.showerror("ERROR","WRONG PASSWORD, TRY AGAIN")"""
+
     def __init__(self):
         # chat window which is currently hidden
 
@@ -44,7 +46,6 @@ class GUI:
                        relx=0.2,
                        rely=0.07)
 
-
         self.labelName = Label(self.login,
                                text="NAME:",
                                font="Times 14 bold", bg="#ffcc99")
@@ -53,8 +54,8 @@ class GUI:
                              relx=0.1,
                              rely=0.4)
 
-        self.icon = PhotoImage(file= r"chat.png")
-        self.iconLabel = Label(self.login, image=self.icon,bg="#ffcc99")
+        self.icon = PhotoImage(file=r"chat.png")
+        self.iconLabel = Label(self.login, image=self.icon, bg="#ffcc99")
         self.iconLabel.place(relx=0.10,
                              rely=0.65)
         """self.labelPass = Label(self.login,
@@ -92,14 +93,19 @@ class GUI:
         self.go.place(relx=0.4,
                       rely=0.60)
 
-
         self.Window.protocol("WM_DELETE_WINDOW", self.close)
+        
+        self.login.bind(
+            '<Return>', lambda e: self.goAhead(self.entryName.get()))
         self.Window.mainloop()
+        
 
     def close(self):
-        self.client.send(bytes('bye',FORMAT))
-        self.client.send(bytes('bye',FORMAT))
+        self.client.send(bytes('bye', FORMAT))
+        self.client.send(bytes('bye', FORMAT))
+        self.stop = True
         self.Window.destroy()
+        self.client.close()
 
     def goAhead(self, name):
         self.login.destroy()
@@ -109,8 +115,9 @@ class GUI:
         self.client = socket(AF_INET, SOCK_STREAM)
         print(ADDR)
         self.client.connect(ADDR)
-        rcv = threading.Thread(target=self.receive)
-        rcv.start()
+        self.stop = False
+        self.rcv = threading.Thread(target=self.receive)
+        self.rcv.start()
 
     # The main layout of the chat
     def layout(self, name):
@@ -120,73 +127,76 @@ class GUI:
         self.Window.deiconify()
         self.Window.title("Let's Chat")
         self.Window.resizable(width=False,
-                          height=False)
+                              height=False)
         self.Window.configure(width=470,
-                          height=550,
-                          bg="#ffcc99")
+                              height=550,
+                              bg="#ffcc99")
         self.labelHead = Label(self.Window,
-                           bg="light blue",
-                           fg="#001a4d",
-                           text=self.name,
-                           font="Times 13 bold",
-                           pady=5)
+                               bg="light blue",
+                               fg="#001a4d",
+                               text=self.name,
+                               font="Times 13 bold",
+                               pady=5)
 
         self.labelHead.place(relwidth=1)
         self.line = Label(self.Window,
-                      width=450,
-                      bg="light blue")
+                          width=450,
+                          bg="light blue")
 
         self.line.place(relwidth=1,
-                    rely=0.07,
-                    relheight=0.012)
+                        rely=0.07,
+                        relheight=0.012)
 
         self.textCons = Text(self.Window,
-                         width=20,
-                         height=2,
-                         bg="#ffcc99",
-                         fg="black",
-                         font="Times 14 bold",
-                         padx=5,
-                         pady=5)
+                             width=20,
+                             height=2,
+                             bg="#ffcc99",
+                             fg="black",
+                             font="Times 14 bold",
+                             padx=5,
+                             pady=5)
 
         self.textCons.place(relheight=0.745,
-                        relwidth=1,
-                        rely=0.175)
+                            relwidth=1,
+                            rely=0.175)
 
         self.labelBottom = Label(self.Window,
-                             bg="light blue",
-                             height=80)
+                                 bg="light blue",
+                                 height=80)
 
         self.labelBottom.place(relwidth=1,
-                           rely=0.9)
+                               rely=0.9)
 
         self.entryMsg = Entry(self.labelBottom,
-                          bg="#ffcc99",
-                          fg="black",
-                          font="Times 13")
+                              bg="#ffcc99",
+                              fg="black",
+                              font="Times 13")
 
     # place the given widget
     # into the gui window
         self.entryMsg.place(relwidth=0.74,
-                        relheight=0.03,
-                        rely=0.008,
-                        relx=0.011)
+                            relheight=0.03,
+                            rely=0.008,
+                            relx=0.011)
 
         self.entryMsg.focus()
 
     # create a Send Button
-        self.buttonImg = PhotoImage(file = r"greentick.png")
+        self.buttonImg = PhotoImage(file=r"greentick.png")
         self.buttonMsg = Button(self.labelBottom,
-                            text="SEND",
-                            font="Times 14 bold",
-                            width=18,
-                            bg="#00ff00", image = self.buttonImg,compound = RIGHT,
-                            command=lambda: self.sendButton(self.entryMsg.get()))
+                                text="SEND",
+                                font="Times 14 bold",
+                                width=18,
+                                bg="#00ff00", image=self.buttonImg, compound=RIGHT,
+                                command=lambda: self.sendButton(self.entryMsg.get()))
+
+        self.Window.bind(
+            '<Return>', lambda e: self.sendButton(self.entryMsg.get()))
 
         self.buttonMsg.place(relx=0.77,
-                         rely=0.008,
-                         relheight=0.03,
-                         relwidth=0.22)
+                             rely=0.008,
+                             relheight=0.03,
+                             relwidth=0.22)
 
         self.textCons.config(cursor="arrow")
 
@@ -196,7 +206,7 @@ class GUI:
     # place the scroll bar
     # into the gui window
         scrollbar.place(relheight=1,
-                    relx=0.974)
+                        relx=0.974)
 
         scrollbar.config(command=self.textCons.yview)
 
@@ -204,44 +214,47 @@ class GUI:
 
 
 # function to basically start the thread for sending messages
+
     def sendButton(self, msg):
         self.textCons.config(state=DISABLED)
         self.msg = msg
         self.entryMsg.delete(0, END)
-        snd = threading.Thread(target=self.sendMessage)
-        snd.start()
+        self.snd = threading.Thread(target=self.sendMessage)
+        self.snd.start()
 
 
 # function to receive messages
+
     def receive(self):
-        while True:
+        while not self.stop:
             try:
                 message = self.client.recv(1024).decode(FORMAT)
-                print(message)
             # if the messages from the server is NAME send the client's name
                 if message == 'NAME':
                     self.client.send(self.name.encode(FORMAT))
                 else:
-                # insert messages to text box
+                    # insert messages to text box
                     self.textCons.config(state=NORMAL)
                     self.textCons.insert(END,
-                                     message + "\n\n")
+                                         message + "\n\n")
 
                     self.textCons.config(state=DISABLED)
                     self.textCons.see(END)
             except:
-            # an error will be printed on the command line or console if there's an error
+                # an error will be printed on the command line or console if there's an error
                 print("An error occured!")
                 self.client.close()
                 break
 
 
 # function to send messages
+
     def sendMessage(self):
         self.textCons.config(state=DISABLED)
-        while True:
-            time=datetime.datetime.now()
-            time_msg="%s/%s/%s-%s:%s:%s"%(time.day,time.month,time.year,time.hour,time.minute,time.second)
+        while not self.stop:
+            time = datetime.datetime.now()
+            time_msg = "%s/%s/%s-%s:%s:%s" % (time.day, time.month,
+                                              time.year, time.hour, time.minute, time.second)
             message = (f"{self.msg}")
             self.client.send(time_msg.encode(FORMAT))
             self.client.send(message.encode(FORMAT))
