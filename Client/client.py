@@ -52,7 +52,7 @@ class GUI:
                              relx=0.1,
                              rely=0.4)
 
-        self.icon = PhotoImage(file= r"C:\Users\Lenovo\Desktop\chat.png")
+        self.icon = PhotoImage(file= r"chat.png")
         self.iconLabel = Label(self.login, image=self.icon,bg="#ffcc99")
         self.iconLabel.place(relx=0.10,
                              rely=0.65)
@@ -170,7 +170,7 @@ class GUI:
         self.entryMsg.focus()
 
     # create a Send Button
-        self.buttonImg = PhotoImage(file = r"C:\Users\Lenovo\Desktop\greentick.png")
+        self.buttonImg = PhotoImage(file = r"greentick.png")
         self.buttonMsg = Button(self.labelBottom,
                             text="SEND",
                             font="Times 14 bold",
