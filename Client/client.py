@@ -125,7 +125,7 @@ class GUI:
 
     # to show chat window
         self.Window.deiconify()
-        self.Window.title("Let's Chat")
+        self.Window.title("Chat")
         self.Window.resizable(width=False,
                               height=False)
         self.Window.configure(width=470,
@@ -134,7 +134,7 @@ class GUI:
         self.labelHead = Label(self.Window,
                                bg="light blue",
                                fg="#001a4d",
-                               text=self.name,
+                               text= "Signed-in as " + self.name,
                                font="Times 13 bold",
                                pady=5)
 
@@ -152,7 +152,7 @@ class GUI:
                              height=2,
                              bg="#ffcc99",
                              fg="black",
-                             font="Times 14 bold",
+                             font="Times 14",
                              padx=5,
                              pady=5)
 
