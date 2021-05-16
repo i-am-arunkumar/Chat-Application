@@ -197,6 +197,7 @@ class GUI:
                 # an error will be printed on the command line or console if there's an error
                 print("An error occured!")
                 self.client.close()
+                break
 
     # function to send messages
     def sendMessage(self):
