@@ -35,12 +35,12 @@ class GUI:
                              height=False)
         self.login.configure(width=350,
                              height=300)
-        self.login.configure(bg="#17202A")
+        self.login.configure(bg="#551111")
         # create a Label
         self.pls = Label(self.login,
                          text="LET'S CHAT!\n Enter Name To Continue:",
                          justify=CENTER,
-                         font="Helvetica 16 bold", bg="#17202A",
+                         font="Helvetica 16 bold", bg="#551111",
                          fg="#EAECEE")
 
         self.pls.place(relheight=0.15,
@@ -49,7 +49,7 @@ class GUI:
 
         self.labelName = Label(self.login,
                                text="NAME:",
-                               font="Helvetica 14 bold", bg="#17202A",
+                               font="Helvetica 14 bold", bg="#551111",
                                fg="#EAECEE")
 
         self.labelName.place(relheight=0.1,
@@ -57,7 +57,7 @@ class GUI:
                              rely=0.4)
 
         self.icon = PhotoImage(file=r"chat.png")
-        self.iconLabel = Label(self.login, image=self.icon, bg="#17202A")
+        self.iconLabel = Label(self.login, image=self.icon, bg="#551111")
         self.iconLabel.place(relx=0.10,
                              rely=0.65)
         """self.labelPass = Label(self.login,
@@ -88,7 +88,7 @@ class GUI:
 
         self.go = Button(self.login,
                          text="LOGIN",
-                         font="Helvetica 14 bold", bg="Crimson", fg="#EAECEE",
+                         font="Helvetica 14 bold", bg="#113311", fg="#EAECEE",
                          command=lambda: self.goAhead(self.entryName.get()))
         self.go.flash()
 
@@ -124,9 +124,9 @@ class GUI:
                               height=False)
         self.Window.configure(width=470,
                               height=550,
-                              bg="#17202A")
+                              bg="#330000")
         self.labelHead = Label(self.Window,
-                               bg="#17202A",
+                               bg="#330000",
                                fg="#EAECEE",
                                text=self.name,
                                font="Helvetica 13 bold",
@@ -135,7 +135,7 @@ class GUI:
         self.labelHead.place(relwidth=1)
         self.line = Label(self.Window,
                           width=450,
-                          bg="#ABB2B9")
+                          bg="#000000")
 
         self.line.place(relwidth=1,
                         rely=0.07,
@@ -144,7 +144,7 @@ class GUI:
         self.textCons = Text(self.Window,
                              width=20,
                              height=2,
-                             bg="#17202A",
+                             bg="#330000",
                              fg="#EAECEE",
                              font="Helvetica 14",
                              padx=5,
@@ -155,14 +155,14 @@ class GUI:
                             rely=0.08)
 
         self.labelBottom = Label(self.Window,
-                                 bg="#ABB2B9",
+                                 bg="#330000",
                                  height=80)
 
         self.labelBottom.place(relwidth=1,
                                rely=0.825)
 
         self.entryMsg = Entry(self.labelBottom,
-                              bg="#2C3E50",
+                              bg="#330022",
                               fg="#EAECEE",
                               font="Helvetica 13")
 
@@ -207,12 +207,12 @@ class GUI:
 
         self.textCons.config(state=DISABLED)
 
+#function to exit the GUI interface
     def EXIT(self):
         if messagebox.askquestion("Quit","Are you sure to quit??") == "yes":
-            self.client.send("__EXITING".encode(FORMAT))
-            self.client.send("__EXITING".encode(FORMAT))
+            self.client.close()
             self.Window.destroy()
-            quit()
+
 # function to basically start the thread for sending messages
     def sendButton(self, msg):
         self.textCons.config(state=DISABLED)
