@@ -15,11 +15,6 @@ ADDR = (HOST, PORT)
 
 class GUI:
     # constructor method
-    """def buttonClick(self):
-             if(self.entryPass.get() == "1234"):
-                self.goAhead(self.entryName.get())
-             else:
-                tkinter.messagebox.showerror("ERROR","WRONG PASSWORD, TRY AGAIN")"""
 
     def __init__(self):
         # chat window which is currently hidden
@@ -58,12 +53,7 @@ class GUI:
         self.iconLabel = Label(self.login, image=self.icon, bg="#ffcc99")
         self.iconLabel.place(relx=0.10,
                              rely=0.65)
-        """self.labelPass = Label(self.login,
-                               text="PASSWORD:",
-                               font="Times 14 bold", bg="#ffcc99")
-        self.labelPass.place(relheight=0.1,
-                             relx=0.1,
-                             rely=0.40)"""
+
         self.entryName = Entry(self.login)
 
         self.entryName.place(relwidth=0.4,
@@ -72,14 +62,7 @@ class GUI:
                              rely=0.4)
 
         self.entryName.focus()
-        """self.entryPass = Entry(self.login)
 
-        self.entryPass.place(relwidth=0.4,
-                             relheight=0.12,
-                             relx=0.45,
-                             rely=0.40)
-
-        self.entryPass.focus()"""
 
         # create a Continue Button
         # along with action
