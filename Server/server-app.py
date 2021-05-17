@@ -40,15 +40,9 @@ class Server:
             try:
                 time = client.recv(Server.BUFSIZ).decode("utf8")
                 msg = client.recv(Server.BUFSIZ).decode("utf8")
-                if msg != "__EXITING":
-                    Server.broadcast(
-                        msg, "{Time}=>\t{Name}:\t".format(Time=time, Name=name))
-                    Write_New(time, name, msg)
-                else:
-                    #client.send(bytes("bye", "utf8"))
-                    client.close()
-                    del Server.connections[client]
-                    break
+                Server.broadcast(
+                    msg, "{Time}=>\t{Name}:\t".format(Time=time, Name=name))
+                Write_New(time, name, msg)
             except:
                 client.close()
                 del Server.connections[client]
